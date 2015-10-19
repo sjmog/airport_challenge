@@ -48,12 +48,19 @@ describe 'User Stories' do
     before do
       allow(Kernel).to receive(:rand).and_return 6
     end
-    
+
     it 'does not allow planes to land' do
       airport = Airport.new(20)
       plane = Plane.new
       allow(airport).to receive(:stormy?).and_return true
       expect { airport.land(plane) }.to raise_error 'Cannot land plane: weather is stormy'
+    end
+
+    it 'does not allow planes to take off' do
+      airport = Airport.new(20)
+      plane = Plane.new
+      allow(airport).to receive(:stormy?).and_return true
+      expect { airport.take_off(plane) }.to raise_error 'Cannot take off plane: weather is stormy'
     end
   end
 end
