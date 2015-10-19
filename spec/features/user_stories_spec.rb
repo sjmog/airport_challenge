@@ -31,7 +31,8 @@ describe 'User Stories' do
     # I want to prevent airplanes landing when my airport if full
     it 'does not allow planes to land when airport is full' do
       20.times do
-        airport.land(plane)
+        the_plane = Plane.new
+        airport.land(the_plane)
       end
       expect { airport.land(plane) }.to raise_error 'Cannot land plane: airport full'
     end
@@ -50,7 +51,10 @@ describe 'User Stories' do
     # I would like a default airport capacity that can be overridden as appropriate
     it 'airports have a default capacity' do
       the_airport = Airport.new(weather_reporter: WeatherReporter.new)
-      Airport::DEFAULT_CAPACITY.times { the_airport.land(plane) }
+      Airport::DEFAULT_CAPACITY.times do 
+        the_plane = Plane.new
+        the_airport.land(the_plane)
+      end
       expect { the_airport.land(plane) }.to raise_error 'Cannot land plane: airport full'
     end
 
@@ -59,14 +63,27 @@ describe 'User Stories' do
     # I want to ensure a flying plane cannot take off and cannot be in an airport
     it 'flying planes cannot take off' do
       airport.land(plane)
-      flying_plane = airport.take_off(plane)
-      expect { flying_plane.take_off }.to raise_error 'Plane cannot take off: plane already flying'
+      airport.take_off(plane)
+      expect { plane.take_off }.to raise_error 'Plane cannot take off: plane already flying'
     end
 
     it 'flying planes cannot be in an airport' do
       airport.land(plane)
-      flying_plane = airport.take_off(plane)
-      expect { flying_plane.airport }.to raise_error 'Plane cannot be at an airport: plane already flying'
+      airport.take_off(plane)
+      expect { plane.airport }.to raise_error 'Plane cannot be at an airport: plane already flying'
+    end
+
+    # As an air traffic controller
+    # So the system is consistent and correctly reports plane status and location
+    # I want to ensure a plane that is not flying cannot land and must be in an airport
+    it 'non-flying planes cannot land' do
+      airport.land(plane)
+      expect { plane.land(airport) }.to raise_error 'Plane cannot land: plane already landed'
+    end
+
+    it 'non-flying planes must be in an airport' do
+      airport.land(plane)
+      expect(plane.airport).to eq airport
     end
   end
 
