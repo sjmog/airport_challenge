@@ -6,4 +6,7 @@ class Airport
   def full?
     @capacity.zero?
   end
+
+  def stormy?
+  end
 end
