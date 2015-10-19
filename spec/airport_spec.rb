@@ -52,6 +52,11 @@ describe Airport do
         other_airport.land(plane)
         expect { airport.take_off(plane) }.to raise_error 'Cannot take off plane: plane not at this airport'
       end
+
+      it 'returns the plane that took off' do
+        airport.land(plane)
+        expect(airport.take_off(plane)).to eq plane
+      end
     end
 
     context 'when stormy' do
