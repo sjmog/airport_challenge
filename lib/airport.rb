@@ -1,7 +1,9 @@
 class Airport
-  def initialize(capacity, weather_reporter)
-    @capacity = capacity
-    @weather_reporter = weather_reporter
+  DEFAULT_CAPACITY = 20
+
+  def initialize(opts)
+    @capacity = opts.fetch(:capacity, DEFAULT_CAPACITY)
+    @weather_reporter = opts[:weather_reporter]
     @planes = []
   end
 
